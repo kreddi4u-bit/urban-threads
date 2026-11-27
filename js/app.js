@@ -20,6 +20,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  sendPasswordResetEmail,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   getFirestore,
@@ -48,6 +49,7 @@ export {
   setDoc,
   writeBatch,
   serverTimestamp,
+  sendPasswordResetEmail,
 };
 
 /* true once the settings in firebase-config.js have been filled in */
