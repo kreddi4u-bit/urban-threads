@@ -1,7 +1,7 @@
 // Login page: log in or sign up with an email and password (Firebase Authentication).
 import {
   renderChrome, authReady, auth, db, doc, setDoc, serverTimestamp,
-  createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail,
   friendlyAuthError, isConfigured,
 } from "./app.js";
 
@@ -14,6 +14,7 @@ const nextPage = allowedPages.includes(params.get("next")) ? params.get("next") 
 const tabs = document.querySelectorAll("[data-tab]");
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
+const forgotPassword=document.getElementById("forgotPassword");
 
 /* ---------- tabs ---------- */
 function showTab(name) {
@@ -49,6 +50,30 @@ function checkSetup(form) {
     "Firebase is not set up yet. Paste your settings into js/firebase-config.js first.";
   return false;
 }
+
+/* ---------- forgot password ---------- */
+forgotPassword.addEventListener("click", async (event) => {
+  event.preventDefault();
+
+  const email = loginForm.email.value.trim();
+  const message = loginForm.querySelector(".form__message");
+
+  message.textContent = "";
+
+  if (!email) {
+    message.textContent = "Enter your email address first.";
+    loginForm.email.focus();
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    message.textContent = "Password reset email sent. Check your inbox.";
+  } catch (error) {
+    console.error(error);
+    message.textContent = friendlyAuthError(error.code);
+  }
+});
 
 /* ---------- log in ---------- */
 loginForm.addEventListener("submit", async (event) => {
